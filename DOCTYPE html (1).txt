@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TikTok Tea Corner - Online Order</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+    body{background:linear-gradient(135deg,#ff416c,#ff4b2b);color:#fff;overflow-x:hidden}
+    header{background:rgba(0,0,0,0.7);padding:15px 30px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000}
+    header h1{font-size:1.5rem}
+    nav a{margin-left:15px;text-decoration:none;color:#fff;font-weight:600}
+    nav a:hover{color:#ffd700}
+    .hero{text-align:center;padding:60px 20px}
+    .hero h2{font-size:2.3rem;margin-bottom:15px}
+    .btn{padding:10px 20px;background:#ffd700;color:#000;border:none;border-radius:25px;cursor:pointer;font-weight:600;transition:.3s}
+    .btn:hover{transform:scale(1.1)}
+    .menu{padding:50px 20px;text-align:center}
+    .menu h2{font-size:2rem;margin-bottom:25px}
+    .menu-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;max-width:1000px;margin:auto}
+    .item{background:rgba(255,255,255,0.1);padding:20px;border-radius:15px;transition:.3s}
+    .item:hover{transform:translateY(-8px);background:rgba(255,255,255,0.2)}
+    .item h3{margin-bottom:10px}
+    .item p{color:#ffd700;font-weight:700;margin-bottom:10px}
+    .cart{padding:50px 20px;background:rgba(0,0,0,0.6);text-align:center}
+    .cart h2{font-size:2rem;margin-bottom:15px}
+    .cart-list{max-width:700px;margin:auto;text-align:left;background:rgba(255,255,255,0.1);padding:20px;border-radius:15px}
+    .cart-list p{margin:8px 0}
+    .cart-actions{margin-top:20px}
+    footer{background:#000;padding:15px;text-align:center;font-size:.9rem}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>☕ TikTok Tea Corner</h1>
+    <nav>
+      <a href="#menu">Menu</a>
+      <a href="#cart">Cart</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Welcome to TikTok Tea Corner</h2>
+    <p>Fresh tea, coffee & snacks now available online!</p>
+    <a href="#menu"><button class="btn">Order Now</button></a>
+  </section>
+
+  <section id="menu" class="menu">
+    <h2>Our Menu</h2>
+    <div class="menu-items">
+      <div class="item">
+        <h3>☕ Coffee</h3>
+        <p>₹20</p>
+        <button class="btn" onclick="addToCart('Coffee',20)">Add to Cart</button>
+      </div>
+      <div class="item">
+        <h3>🍵 Tea</h3>
+        <p>₹10</p>
+        <button class="btn" onclick="addToCart('Tea',10)">Add to Cart</button>
+      </div>
+      <div class="item">
+        <h3>🥛 Special Machine Tea</h3>
+        <p>₹15</p>
+        <button class="btn" onclick="addToCart('Special Machine Tea',15)">Add to Cart</button>
+      </div>
+      <div class="item">
+        <h3>🍔 Bun Maska</h3>
+        <p>₹25</p>
+        <button class="btn" onclick="addToCart('Bun Maska',25)">Add to Cart</button>
+      </div>
+      <div class="item">
+        <h3>🍫 Bun Maska (Jam)</h3>
+        <p>₹25</p>
+        <button class="btn" onclick="addToCart('Bun Maska (Jam)',25)">Add to Cart</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="cart" class="cart">
+    <h2>🛒 Your Cart</h2>
+    <div class="cart-list" id="cartList">
+      <p>No items in cart.</p>
+    </div>
+    <div class="cart-actions">
+      <button class="btn" onclick="placeOrder()">✅ Place Order</button>
+      <button class="btn" onclick="clearCart()">🗑 Clear Cart</button>
+    </div>
+  </section>
+
+  <section id="contact" class="cart">
+    <h2>📞 Contact Us</h2>
+    <p>Mob: +91 7503363468</p>
+    <a href="tel:+917503363468"><button class="btn">📞 Call Now</button></a>
+    <a href="https://wa.me/917503363468" target="_blank"><button class="btn">💬 WhatsApp</button></a>
+  </section>
+
+  <footer>
+    © 2025 TikTok Tea Corner | Designed with ❤️
+  </footer>
+
+  <script>
+    let cart = [];
+
+    function addToCart(item, price) {
+      let found = cart.find(c => c.item === item);
+      if(found){
+        found.qty++;
+      } else {
+        cart.push({item, price, qty:1});
+      }
+      updateCart();
+    }
+
+    function updateCart(){
+      let cartList = document.getElementById('cartList');
+      cartList.innerHTML = '';
+      if(cart.length === 0){
+        cartList.innerHTML = '<p>No items in cart.</p>';
+        return;
+      }
+      let total = 0;
+      cart.forEach((c, i) => {
+        total += c.price * c.qty;
+        cartList.innerHTML += `<p>${c.item} - ₹${c.price} x ${c.qty} = ₹${c.price*c.qty} 
+          <button onclick="removeItem(${i})">❌</button></p>`;
+      });
+      cartList.innerHTML += `<hr><p><strong>Total: ₹${total}</strong></p>`;
+    }
+
+    function removeItem(index){
+      cart.splice(index,1);
+      updateCart();
+    }
+
+    function clearCart(){
+      cart = [];
+      updateCart();
+    }
+
+    function placeOrder(){
+      if(cart.length === 0){
+        alert("Your cart is empty!");
+        return;
+      }
+      let orderText = "Hello! I want to order:\n";
+      let total = 0;
+      cart.forEach(c => {
+        orderText += `${c.item} x ${c.qty} = ₹${c.price*c.qty}\n`;
+        total += c.price*c.qty;
+      });
+      orderText += `\nTotal: ₹${total}`;
+      let encoded = encodeURIComponent(orderText);
+      window.open(`https://wa.me/917503363468?text=${encoded}`,'_blank');
+    }
+  </script>
+</body>
+</html>
